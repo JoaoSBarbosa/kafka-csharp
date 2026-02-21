@@ -4,7 +4,7 @@ namespace Producer.Application.Users.Services;
 
 public interface IUserService
 {
-    Task AddAsync(UserCreate create);
+    Task AddAsync(RegisterUserRequest request);
     Task<UserResponse> FindByIdAsync(Guid userId);
     Task<IEnumerable<UserResponse>> GetAllAsync();
 }

@@ -18,10 +18,10 @@ public class UserService(
     private readonly IEventPublisher _eventPublisher = eventPublisher;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task AddAsync(UserCreate create)
+    public async Task AddAsync(RegisterUserRequest request)
     {
-        ValidateUser(create);
-        var user = UserMapper.ToEntity(create);
+        ValidateUser(request);
+        var user = UserMapper.ToEntity(request);
         await _userRepository.AddAsync(user);
 
         await PublishUserRegisteredEventAsync(user);
@@ -51,17 +51,17 @@ public class UserService(
     }
 
 
-    private void ValidateUser(UserCreate create)
+    private void ValidateUser(RegisterUserRequest request)
     {
-        ArgumentNullException.ThrowIfNull(create, nameof(create));
+        ArgumentNullException.ThrowIfNull(request, nameof(request));
 
-        if (string.IsNullOrWhiteSpace(create.Email))
-            throw new ArgumentException("O email deve ser informado.", nameof(create.Email));
+        if (string.IsNullOrWhiteSpace(request.Email))
+            throw new ArgumentException("O email deve ser informado.", nameof(request.Email));
 
-        if (string.IsNullOrWhiteSpace(create.FirstName))
-            throw new ArgumentException("O primeiro nome deve ser informado.", nameof(create.FirstName));
+        if (string.IsNullOrWhiteSpace(request.FirstName))
+            throw new ArgumentException("O primeiro nome deve ser informado.", nameof(request.FirstName));
 
-        if (string.IsNullOrWhiteSpace(create.LastName))
-            throw new ArgumentException("O segundo nome deve ser informado.", nameof(create.LastName));
+        if (string.IsNullOrWhiteSpace(request.LastName))
+            throw new ArgumentException("O segundo nome deve ser informado.", nameof(request.LastName));
     }
 }
