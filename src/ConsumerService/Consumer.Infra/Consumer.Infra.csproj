@@ -1,20 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\Consumer.Application\Consumer.Application.csproj" />
-    <ProjectReference Include="..\Consumer.Domain\Consumer.Domain.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Consumer.Application\Consumer.Application.csproj" />
+        <ProjectReference Include="..\Consumer.Domain\Consumer.Domain.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Config\" />
-    <Folder Include="Kafka\Consumers\" />
-    <Folder Include="Persistence\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Config\" />
+        <Folder Include="Kafka\Consumers\" />
+        <Folder Include="Persistence\" />
+    </ItemGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <ItemGroup>
+        <PackageReference Include="Confluent.Kafka" Version="2.13.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.24" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.24">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.24" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.24" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.24" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+      <UserSecretsId>fe676e9c-9a1f-41b9-b6d8-a8a65061487a</UserSecretsId>
   </PropertyGroup>
 
 </Project>
