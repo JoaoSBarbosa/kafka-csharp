@@ -5,6 +5,12 @@
     <ProjectReference Include="..\Consumer.Domain\Consumer.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Config\" />
+    <Folder Include="Kafka\Consumers\" />
+    <Folder Include="Persistence\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
