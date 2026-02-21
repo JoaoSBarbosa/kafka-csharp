@@ -22,7 +22,7 @@ public class UserService(
     {
         ValidateUser(request);
         var user = UserMapper.ToEntity(request);
-        await _userRepository.AddAsync(user);
+        _userRepository.Insert(user);
 
         await PublishUserRegisteredEventAsync(user);
         user.MarkAsSent();

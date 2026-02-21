@@ -11,9 +11,9 @@ public class UserMap : IEntityTypeConfiguration<User>
         builder.ToTable("User");
 
         builder.HasKey(u => u.Id);
-        builder.Property(u => u.Email).IsRequired().HasMaxLength(256).HasColumnType("NVARCAHR");
-        builder.Property(u => u.FistName).IsRequired().HasMaxLength(50).HasColumnType("NVARCAHR");
-        builder.Property(u => u.LastName).IsRequired().HasMaxLength(100).HasColumnType("NVARCAHR");
+        builder.Property(u => u.Email).IsRequired().HasMaxLength(256).HasColumnType("NVARCHAR");
+        builder.Property(u => u.FistName).IsRequired().HasMaxLength(50).HasColumnType("NVARCHAR");
+        builder.Property(u => u.LastName).IsRequired().HasMaxLength(100).HasColumnType("NVARCHAR");
         builder.Property(u => u.Status).IsRequired();
         builder.Property(u => u.CreatedAt).IsRequired().HasColumnType("DATETIME2").HasDefaultValueSql("GETUTCDATE()");
     }

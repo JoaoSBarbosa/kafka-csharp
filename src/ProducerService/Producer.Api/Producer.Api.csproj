@@ -1,23 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+      <UserSecretsId>c3f5a70e-76a6-4732-9399-b4f7ab9a637b</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.24"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.24" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Producer.Application\Producer.Application.csproj"/>
-        <ProjectReference Include="..\Producer.Infra\Producer.Infra.csproj"/>
+        <ProjectReference Include="..\Producer.Application\Producer.Application.csproj" />
+        <ProjectReference Include="..\Producer.Infra\Producer.Infra.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Extensions\"/>
+        <Folder Include="Extensions\" />
     </ItemGroup>
 
 </Project>

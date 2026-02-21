@@ -1,8 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using Producer.Application.Users.Services;
 using Producer.Application.Users.Services.Impl;
 using Producer.Infra.Config;
-using Producer.Infra.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,12 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddFakeInfra();
+builder.Services.AddInfra(builder.Configuration);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddControllers();
 
-string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<KafkaPlaygroundContext>(options => options.UseSqlServer(connection ?? string.Empty));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
