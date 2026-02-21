@@ -6,8 +6,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Ports\Messaging\" />
-    <Folder Include="Ports\Persistence\" />
     <Folder Include="UseCases\" />
   </ItemGroup>
 
