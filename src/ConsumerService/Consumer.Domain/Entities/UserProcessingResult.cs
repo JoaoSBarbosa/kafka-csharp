@@ -21,7 +21,7 @@ public class UserProcessingResult
         UserId = @event.UserId;
         Email = @event.Email;
         Success = true;
-        ProcessedAt = DateTime.UtcNow;
+        ProcessedAt = DateTime.Now;
     }
 
     public void MarkAsFailed(string error)

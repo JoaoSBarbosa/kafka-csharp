@@ -17,13 +17,12 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        // Bootstrap
         _logger.LogInformation("🚀 Worker iniciado");
 
         using var scope = _serviceProvider.CreateScope();
 
-        var consumer = scope.ServiceProvider
-            .GetRequiredService<IEventConsumer>();
-
+        var consumer = scope.ServiceProvider.GetRequiredService<IEventConsumer>();
         await consumer.ConsumeAsync(stoppingToken);
     }
 }

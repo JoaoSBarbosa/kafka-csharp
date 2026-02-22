@@ -2,6 +2,8 @@ using System.Text.Json;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using Producer.Application.Ports.Messaging;
+using Shared.Contracts.Abstractions;
+using Shared.Contracts.Topics;
 
 namespace Producer.Infra.Kafka.Producers;
 
@@ -9,6 +11,7 @@ public class KafkaEventPublisher : IEventPublisher
 {
     private readonly IProducer<string, string> _producer;
     private readonly ILogger<KafkaEventPublisher> _logger;
+    public KafkaTopics Topic => KafkaTopics.Registered;
 
     public KafkaEventPublisher(string bootstrapServer, ILogger<KafkaEventPublisher> logger)
     {
@@ -20,18 +23,17 @@ public class KafkaEventPublisher : IEventPublisher
         _producer = new ProducerBuilder<string, string>(config).Build();
     }
 
+
     public async Task PublishAsync<TEvent>(TEvent @event) where TEvent : class
     {
-        // USANDO O NOME DO EVENTO COMO TOPICO
-        var topic = typeof(TEvent).Name;
         var json = JsonSerializer.Serialize(@event);
 
-        await _producer.ProduceAsync(topic, new Message<string, string>
+        await _producer.ProduceAsync(Topic.Name, new Message<string, string>
         {
             Key = Guid.NewGuid().ToString(),
             Value = json
         });
 
-        _logger.LogInformation($"[KAFKA PUBLISHER] {topic}: {json}]");
+        _logger.LogInformation($"[KAFKA PUBLISHER] {Topic.Name}: {json}]");
     }
 }

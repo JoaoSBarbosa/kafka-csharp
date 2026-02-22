@@ -1,43 +1,30 @@
 using Confluent.Kafka;
-using Consumer.Application.Handlers;
 using Consumer.Application.Ports.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
-using Shared.Contracts.Events;
+using Shared.Contracts.Topics;
 
 namespace Consumer.Infra.Kafka.Consumer;
 
 public class KafkaConsumerWorker(
     ILogger<KafkaConsumerWorker> logger,
     IConfiguration configuration,
-    UserRegisteredEventHandler handler
+    IMessageDispatcher dispatcher
 ) : IEventConsumer
 {
     private readonly ILogger<KafkaConsumerWorker> _logger = logger;
     private readonly IConfiguration _configuration = configuration;
-    private readonly UserRegisteredEventHandler _handler = handler;
+    private readonly IMessageDispatcher _dispatcher = dispatcher;
+
+    public KafkaTopics Topic => KafkaTopics.Registered;
 
     public async Task ConsumeAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation(" 🫟[KAFKA_INFRA] Iniciando processo");
-
-        var config = new ConsumerConfig
-        {
-            BootstrapServers = _configuration["Kafka:BootstrapServers"]
-                               ?? throw new InvalidOperationException("Kafka:BootstrapServers não configurado"),
-
-            GroupId = _configuration["Kafka:GroupId"] ?? "consumer-worker",
-            AutoOffsetReset = AutoOffsetReset.Earliest,
-            EnableAutoCommit = false
-        };
-
+        var config = GetConsumerConfig();
         using var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+        consumer.Subscribe(Topic.Name);
 
-        var topic = nameof(UserRegisteredEvent);
-        consumer.Subscribe(topic);
-
-        _logger.LogInformation(" ✅[KAFKA] Consumindo tópico - ♻️ {Topic}", topic);
+        _logger.LogInformation("📥 Consumindo tópico {Topic}", Topic.Name);
 
         try
         {
@@ -45,20 +32,43 @@ public class KafkaConsumerWorker(
             {
                 var result = consumer.Consume(cancellationToken);
 
-                var evt = JsonSerializer.Deserialize<UserRegisteredEvent>(result.Message.Value)!;
+                var dispatchResult = await _dispatcher.DispatchAsync(result.Message.Value, cancellationToken);
 
-                await _handler.HandleAsync(evt, cancellationToken);
+                if (dispatchResult.Success)
+                {
+                    consumer.Commit(result);
+                }
+                else
+                {
+                    _logger.LogWarning(
+                        "Mensagem descartada. Erro={Error}",
+                        dispatchResult.ErrorMessage
+                    );
 
-                consumer.Commit(result);
+                    consumer.Commit(result);
+                }
             }
         }
         catch (OperationCanceledException)
         {
-            // shutdown limpo
+            _logger.LogInformation("Consumer encerrado");
         }
         finally
         {
             consumer.Close();
         }
+    }
+
+    private ConsumerConfig GetConsumerConfig()
+    {
+        return new ConsumerConfig
+        {
+            BootstrapServers = _configuration["Kafka:BootstrapServers"] ??
+                               throw new InvalidOperationException("Kafka:BootstrapServers não configurado"),
+
+            GroupId = _configuration["Kafka:GroupId"] ?? "consumer-worker",
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+            EnableAutoCommit = false
+        };
     }
 }
