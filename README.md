@@ -1,5 +1,17 @@
 # Kafka Playground – Producer / Consumer (.NET 8)
 
+![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp&logoColor=white)
+![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-Event%20Driven-231F20?logo=apachekafka&logoColor=white)
+![Worker Service](https://img.shields.io/badge/.NET-Worker%20Service-5C2D91)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-API-512BD4)
+![Entity Framework Core](https://img.shields.io/badge/EF%20Core-8.0-512BD4)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-Database-CC2927?logo=microsoftsqlserver&logoColor=white)
+![Clean Architecture](https://img.shields.io/badge/Architecture-Clean-blue)
+![Event Driven](https://img.shields.io/badge/Pattern-Event--Driven-orange)
+![Status](https://img.shields.io/badge/Status-Study%20Project-yellow)
+
+
 ## Objetivo
 
 Este repositório demonstra um **fluxo completo de mensageria com Apache Kafka**, utilizando **.NET 8**, **Worker Service**, **ASP.NET Core**, **Entity Framework Core** e **SQL Server**, com separação clara de responsabilidades seguindo princípios de **Clean Architecture**.
