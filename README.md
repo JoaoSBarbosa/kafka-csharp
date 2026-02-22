@@ -1,9 +1,3 @@
-Entendi. Vou ser **objetivo, técnico e profissional**, sem enfeite, sem marketing, sem texto “de IA”.
-Abaixo está **um README que você pode subir num repositório sério**, do jeito que arquiteto/backend espera ler.
-
----
-
-````md
 # Kafka Playground – Producer / Consumer (.NET 8)
 
 ## Objetivo
