@@ -29,7 +29,6 @@ O foco do projeto é **entender, testar e validar**:
 
 ## Estrutura do Projeto
 
-```text
 ├── src
 │   ├── ConsumerService
 │   │   ├── Consumer.Application
@@ -46,8 +45,6 @@ O foco do projeto é **entender, testar e validar**:
 ├── tests
 ├── KafkaPlayground.sln
 └── README.md
-```
-````
 
 ---
 
@@ -274,7 +271,6 @@ Este projeto serve como **base de estudo e experimentação** para:
 
 Não contém otimizações ou hardening de produção.
 
-````
 
 ## Diagrama de Arquitetura (Fluxo Real)
 
