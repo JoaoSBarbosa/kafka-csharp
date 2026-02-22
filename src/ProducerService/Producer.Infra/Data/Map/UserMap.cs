@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Producer.Domain.Entities;
 
-namespace Producer.Infra.Map;
+namespace Producer.Infra.Data.Map;
 
 public class UserMap : IEntityTypeConfiguration<User>
 {

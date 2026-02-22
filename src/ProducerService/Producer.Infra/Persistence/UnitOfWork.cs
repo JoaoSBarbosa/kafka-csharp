@@ -1,5 +1,5 @@
 using Producer.Application.Ports.Persistence;
-using Producer.Infra.Context;
+using Producer.Infra.Data.Context;
 
 namespace Producer.Infra.Persistence;
 

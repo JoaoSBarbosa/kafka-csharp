@@ -27,6 +27,10 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Data\"/>
+    </ItemGroup>
+
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>

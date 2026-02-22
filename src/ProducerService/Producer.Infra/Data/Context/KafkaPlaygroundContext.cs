@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Producer.Domain.Entities;
 
-namespace Producer.Infra.Context;
+namespace Producer.Infra.Data.Context;
 
 public class KafkaPlaygroundContext(DbContextOptions<KafkaPlaygroundContext> options) : DbContext(options)
 {

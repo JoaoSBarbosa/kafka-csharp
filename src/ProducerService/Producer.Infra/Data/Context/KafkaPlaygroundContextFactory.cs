@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace Producer.Infra.Context;
+namespace Producer.Infra.Data.Context;
 
 public class KafkaPlaygroundContextFactory : IDesignTimeDbContextFactory<KafkaPlaygroundContext>
 {

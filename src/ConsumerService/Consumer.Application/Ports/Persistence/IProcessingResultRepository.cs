@@ -4,5 +4,5 @@ namespace Consumer.Application.Ports.Persistence;
 
 public interface IProcessingResultRepository
 {
-    Task AddAsync(UserProcessingResult result);
+    Task Insert(UserProcessingResult result);
 }

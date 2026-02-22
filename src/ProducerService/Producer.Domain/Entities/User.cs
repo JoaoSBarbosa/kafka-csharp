@@ -8,7 +8,7 @@ public class User
 
     public string FistName { get; private set; }
     public string LastName { get; private set; }
-    public string Email  { get; private set; }
+    public string Email { get; private set; }
     public UserStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
@@ -16,7 +16,7 @@ public class User
     {
     }
 
-    public User(string email, string firstName, string lastName)
+    public User(string firstName, string lastName, string email)
     {
         Id = Guid.NewGuid();
         Email = email;

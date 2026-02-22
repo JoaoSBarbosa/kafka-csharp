@@ -1,164 +1,357 @@
-# 🚀 Kafka Playground (.NET 8)
-
-![.NET](https://img.shields.io/badge/.NET-8.0-purple)
-![Kafka](https://img.shields.io/badge/Apache%20Kafka-3.x-black)
-![Avro](https://img.shields.io/badge/Avro-Schema-blue)
-![EF Core](https://img.shields.io/badge/EF%20Core-8.0-green)
-![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-brightgreen)
-
-Projeto para estudo de **Apache Kafka com .NET 8**, utilizando **Avro + Schema Registry**, **EF Core**, **Clean Architecture** e **mensageria desacoplada**.
+Entendi. Vou ser **objetivo, técnico e profissional**, sem enfeite, sem marketing, sem texto “de IA”.
+Abaixo está **um README que você pode subir num repositório sério**, do jeito que arquiteto/backend espera ler.
 
 ---
 
-## 🧱 Arquitetura
+````md
+# Kafka Playground – Producer / Consumer (.NET 8)
 
-O projeto segue **Clean Architecture**, garantindo:
+## Objetivo
 
-- Separação total de responsabilidades
-- Domínio independente de infraestrutura
-- Infra dependente do domínio (nunca o contrário)
-- Comunicação via **Ports (interfaces)**
+Este repositório demonstra um **fluxo completo de mensageria com Apache Kafka**, utilizando **.NET 8**, **Worker Service**, **ASP.NET Core**, **Entity Framework Core** e **SQL Server**, com separação clara de responsabilidades seguindo princípios de **Clean Architecture**.
 
+O foco do projeto é **entender, testar e validar**:
+
+- Publicação de eventos via API (Producer)
+- Consumo assíncrono via Worker (Consumer)
+- Persistência de dados em bancos distintos
+- Comunicação entre serviços exclusivamente via Kafka
+
+---
+
+## Escopo
+
+✔ Comunicação assíncrona
+✔ Event-driven architecture
+✔ Producer desacoplado do Consumer
+✔ Contratos compartilhados e imutáveis
+✔ Persistência independente por serviço
+
+❌ Não é um projeto de produção
+❌ Não possui autenticação
+❌ Não possui testes automatizados
+
+---
+
+## Estrutura do Projeto
+
+```text
+├── src
+│   ├── ConsumerService
+│   │   ├── Consumer.Application
+│   │   ├── Consumer.Domain
+│   │   ├── Consumer.Infra
+│   │   └── Consumer.Worker
+│   ├── ProducerService
+│   │   ├── Producer.Api
+│   │   ├── Producer.Application
+│   │   ├── Producer.Domain
+│   │   └── Producer.Infra
+│   └── Shared
+│       └── Shared.Contracts
+├── tests
+├── KafkaPlayground.sln
+└── README.md
 ```
-
-src
-├── KafkaPlayground.Api
-├── KafkaPlayground.Application
-│   ├── Contracts
-│   ├── UseCases
-│   ├── DTOs
-│   └── Ports
-├── KafkaPlayground.Domain
-│   ├── Entities
-│   ├── Events
-│   └── Enums
-├── KafkaPlayground.Infra
-│   ├── Persistence
-│   │   ├── Context
-│   │   ├── Configurations
-│   │   └── Repositories
-│   ├── Messaging
-│   │   └── Kafka
-│   │       ├── Producer
-│   │       └── Consumer
-│   └── DependencyInjection
-└── KafkaPlayground.Worker   👈 Consumer (HostedService)
-
 ````
 
 ---
 
-## 🧠 Responsabilidades por camada
+## Responsabilidade de Cada Camada
 
-### **Domain**
-- Entidades
-- Eventos de domínio (`UserCreatedEvent`, etc.)
-- Enums
-- **NÃO conhece Kafka, EF, Avro, Infra**
+### Shared.Contracts
+
+Contém **somente contratos de comunicação** (eventos Kafka).
+
+- Não depende de nenhuma outra camada
+- Usado tanto pelo Producer quanto pelo Consumer
+- Eventos devem ser **imutáveis**
+
+Exemplo:
+
+- `UserRegisteredEvent`
 
 ---
 
-### **Application**
+### ProducerService
+
+Responsável por **receber requisições HTTP** e **publicar eventos no Kafka**.
+
+#### Producer.Api
+
+- Exposição de endpoints HTTP
+- Não contém regra de negócio
+- Apenas delega para Application
+
+Executável: **SIM**
+
+---
+
+#### Producer.Application
+
 - Casos de uso
-- DTOs
-- Ports (interfaces)
-- Orquestra o domínio
-- **Depende apenas do Domain**
+- Orquestra domínio, persistência e mensageria
+- Define portas (`IEventPublisher`, `IUnitOfWork`, etc.)
+
+Executável: **NÃO**
 
 ---
 
-### **Infra**
-- Kafka Producer / Consumer
-- Serialização Avro
-- EF Core / SQL Server
-- Implementa interfaces definidas na Application
+#### Producer.Domain
+
+- Entidades
+- Enums
+- Regras de negócio puras
+
+Executável: **NÃO**
 
 ---
 
-### **Worker**
-- `BackgroundService`
-- Consumidor Kafka
-- Processa eventos
-- Chama UseCases da Application
+#### Producer.Infra
+
+- Implementações concretas
+- EF Core
+- Kafka Producer
+- Repositórios
+
+Executável: **NÃO**
 
 ---
 
-### **Api**
-- Entrada HTTP
-- Publica eventos no Kafka via Application
+### ConsumerService
+
+Responsável por **consumir eventos do Kafka** e **processá-los de forma assíncrona**.
 
 ---
 
-## 📦 Principais Dependências
+#### Consumer.Worker
 
-```xml
-<TargetFramework>net8.0</TargetFramework>
+- Worker Service (.NET)
+- Mantém o processo vivo
+- Inicializa o consumo Kafka
 
-Apache.Avro                              1.12.1
-Confluent.Kafka                          2.13.1
-Confluent.SchemaRegistry.Serdes.Avro     2.13.1
-KafkaFlow.SchemaRegistry                4.1.0
-Microsoft.EntityFrameworkCore            8.0.24
-Microsoft.EntityFrameworkCore.SqlServer  8.0.24
+Executável: **SIM**
+
+---
+
+#### Consumer.Application
+
+- Handlers de eventos
+- Casos de uso disparados pelo Kafka
+- Coordena persistência e regras
+
+Executável: **NÃO**
+
+---
+
+#### Consumer.Domain
+
+- Entidades de processamento
+- Estados e resultados
+- Regras de domínio
+
+Executável: **NÃO**
+
+---
+
+#### Consumer.Infra
+
+- Kafka Consumer
+- EF Core
+- Repositórios
+- Unit of Work
+
+Executável: **NÃO**
+
+---
+
+## Fluxo de Funcionamento
+
+### 1. Producer
+
+1. Cliente faz requisição HTTP
+2. Controller recebe a requisição
+3. Application executa o caso de uso
+4. Dados são persistidos
+5. Evento é publicado no Kafka
+
+---
+
+### 2. Kafka
+
+- Evento `UserRegisteredEvent` é enviado para o tópico configurado
+- Kafka atua como intermediário desacoplado
+
+---
+
+### 3. Consumer
+
+1. Worker inicia
+2. KafkaConsumer se inscreve no tópico
+3. Mensagem é consumida
+4. Handler processa o evento
+5. Resultado é persistido no banco do Consumer
+6. Offset é commitado manualmente
+
+---
+
+## Execução do Projeto
+
+### Pré-requisitos
+
+- Docker
+- .NET SDK 8
+- SQL Server
+- Kafka (via Docker)
+
+---
+
+### Subir Infraestrutura
+
+```bash
+docker compose up -d
+```
+
+---
+
+### Executar Consumer
+
+```bash
+dotnet run --project src/ConsumerService/Consumer.Worker
+```
+
+---
+
+### Executar Producer
+
+```bash
+dotnet run --project src/ProducerService/Producer.Api
+```
+
+---
+
+## Ordem Correta de Execução
+
+1. Kafka (Docker)
+2. Consumer.Worker
+3. Producer.Api
+4. Enviar requisição HTTP
+
+---
+
+## Observações Técnicas Importantes
+
+- Worker Service é **Singleton**
+- KafkaConsumer é resolvido via **IServiceScope**
+- DbContext é **Scoped**
+- Offset é commitado **após sucesso no processamento**
+- Consumer **não conhece Producer**
+- Comunicação é **exclusivamente via Kafka**
+
+---
+
+## Motivações Arquiteturais
+
+- Evitar acoplamento direto entre serviços
+- Permitir escalabilidade independente
+- Simular cenário real de mensageria
+- Facilitar entendimento de Kafka + .NET
+
+---
+
+## Estado do Projeto
+
+✔ Kafka funcionando
+✔ Producer publicando eventos
+✔ Consumer consumindo eventos
+✔ Persistência validada
+✔ Arquitetura consistente
+
+---
+
+## Considerações Finais
+
+Este projeto serve como **base de estudo e experimentação** para:
+
+- Kafka
+- Worker Services
+- Arquitetura orientada a eventos
+- Clean Architecture em .NET
+
+Não contém otimizações ou hardening de produção.
+
+````
+
+## Diagrama de Arquitetura (Fluxo Real)
+
+```mermaid
+flowchart LR
+    %% CLIENTE
+    Client[Cliente HTTP]
+
+    %% PRODUCER
+    subgraph ProducerService
+        API[Producer.Api]
+        APP[Producer.Application]
+        DOMAIN[Producer.Domain]
+        INFRA_P[Producer.Infra]
+        DB_P[(SQL Server - Producer)]
+    end
+
+    %% KAFKA
+    subgraph Kafka
+        TOPIC[(UserRegisteredEvent)]
+    end
+
+    %% CONSUMER
+    subgraph ConsumerService
+        WORKER[Consumer.Worker]
+        KAFKA_C[KafkaConsumerWorker]
+        APP_C[Consumer.Application]
+        DOMAIN_C[Consumer.Domain]
+        INFRA_C[Consumer.Infra]
+        DB_C[(SQL Server - Consumer)]
+    end
+
+    %% FLUXO PRODUCER
+    Client --> API
+    API --> APP
+    APP --> DOMAIN
+    APP --> INFRA_P
+    INFRA_P --> DB_P
+    INFRA_P --> TOPIC
+
+    %% FLUXO CONSUMER
+    WORKER --> KAFKA_C
+    KAFKA_C --> TOPIC
+    KAFKA_C --> APP_C
+    APP_C --> DOMAIN_C
+    APP_C --> INFRA_C
+    INFRA_C --> DB_C
 ````
 
 ---
 
-## 🔄 Fluxo de Mensagens Kafka
+## Diagrama de Sequência (Execução)
 
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant API as Producer.Api
+    participant APP as Producer.Application
+    participant KP as Kafka Producer
+    participant K as Kafka
+    participant KC as Kafka Consumer
+    participant H as UserRegisteredEventHandler
+    participant DB as SQL Consumer
+
+    C->>API: POST /users
+    API->>APP: RegisterUser
+    APP->>KP: Publish UserRegisteredEvent
+    KP->>K: Evento no tópico
+
+    KC->>K: Consume
+    K-->>KC: UserRegisteredEvent
+    KC->>H: Handle(event)
+    H->>DB: Persist UserProcessingResult
 ```
-API
- └─ Application (UseCase)
-     └─ Port (IEventProducer)
-         └─ Infra.Kafka.Producer
-             └─ Kafka Topic (Avro)
-                 └─ Worker (Consumer)
-                     └─ Application
-                         └─ Domain
-```
-
----
-
-## 📌 Convenções Importantes
-
-* ❌ Domain **NUNCA** referencia Infra
-* ❌ Application **NUNCA** referencia Infra
-* ✅ Infra referencia Application + Domain
-* ✅ Worker referencia Application + Infra
-* ✅ API referencia Application
-
----
-
-## 🧪 Objetivos do Projeto
-
-* Kafka Producer / Consumer real
-* Avro + Schema Registry
-* Event-driven architecture
-* .NET 8 moderno
-* Código limpo e profissional
-* Base sólida para projetos reais
-
----
-
-## ⚠️ Observação
-
-Este projeto **não é um monólito acoplado**.
-Cada camada pode virar **microserviço** futuramente sem refatoração estrutural.
-
----
-
-## 🧠 Próximos passos sugeridos
-
-* Dead Letter Topic (DLT)
-* Retry com backoff
-* Outbox Pattern
-* Idempotência no Consumer
-* Observabilidade (OpenTelemetry)
-
----
-
-## 👤 Autor
-
-Projeto de estudos para **Kafka + .NET 8**
-Arquitetura focada em **qualidade, clareza e evolução**
-

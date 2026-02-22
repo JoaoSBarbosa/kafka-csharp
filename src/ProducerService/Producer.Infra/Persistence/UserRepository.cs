@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Producer.Application.Ports.Persistence;
 using Producer.Domain.Entities;
-using Producer.Infra.Context;
+using Producer.Infra.Data.Context;
 
 namespace Producer.Infra.Persistence;
 

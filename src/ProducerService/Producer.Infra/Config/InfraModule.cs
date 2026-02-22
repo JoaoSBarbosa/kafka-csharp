@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Producer.Application.Ports.Messaging;
 using Producer.Application.Ports.Persistence;
-using Producer.Infra.Context;
+using Producer.Infra.Data.Context;
 using Producer.Infra.Kafka.Producers;
 using Producer.Infra.Persistence;
 
@@ -23,7 +23,6 @@ public static class InfraModule
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        // Kafka Usando factory para passar Logger
         services.AddSingleton<IEventPublisher>(provider =>
         {
             var logger = provider.GetRequiredService<ILogger<KafkaEventPublisher>>();

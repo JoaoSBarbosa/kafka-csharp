@@ -1,6 +1,6 @@
 namespace Consumer.Application.Ports.Messaging;
 
-public interface IEventConsumer<TEvent>
+public interface IEventConsumer
 {
-    Task ConsumerAsync(TEvent @event);
+    Task ConsumeAsync(CancellationToken cancellationToken);
 }
